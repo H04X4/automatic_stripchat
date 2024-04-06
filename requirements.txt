@@ -1,0 +1,5 @@
+2captcha-python
+asyncio
+Django
+loguru
+selenium
