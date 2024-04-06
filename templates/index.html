@@ -3,14 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <title>Авторизация и автоматизация</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        input[type="button"] {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        input[type="button"]:hover {
+            background-color: #0056b3;
+        }
+
+        #output {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </head>
 <body>
-    <h1>Авторизация и автоматизация браузера</h1>
-    <form method="post">
-        {% csrf_token %}
-        <label for="username">Логин:</label>
-        <input type="text" id="username" name="username" required>
-        <input type="submit" value="Начать">
-    </form>
+    <div class="container">
+        <h1>Авторизация и автоматизация браузера</h1>
+        <form id="mainForm">
+            {% csrf_token %}
+            <label for="username">Логин:</label>
+            <input type="text" id="username" name="username" required>
+            <br>
+            <input type="button" value="Начать" onclick="runMain()">
+        </form>
+
+     
+        <div id="output"></div>
+    </div>
+
+    <script>
+        function runMain() {
+            var username = document.getElementById("username").value;
+            var formData = new FormData();
+            formData.append('username', username);
+
+            fetch('/run-main/', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('output').innerHTML += data; 
+            })
+            .catch(error => console.error('Ошибка:', error));
+        }
+    </script>
 </body>
 </html>
